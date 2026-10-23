@@ -1,5 +1,5 @@
-<!DOCTYPE html><html lang="ja"><head><meta name="robots" content="noindex,nofollow"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#ff7a59"><title>たのしい旅行計画</title><style>
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ff7a59"><meta name="robots" content="noindex,nofollow"><title>たのしい旅行計画</title><style>
 *{box-sizing:border-box}body{font-family:"Hiragino Sans","Noto Sans JP",system-ui,sans-serif;margin:0;background:#fff8ec;color:#1f2937;font-size:18px;line-height:1.6}
 header{background:linear-gradient(135deg,#ff7a59,#ffb347);color:#fff;padding:16px;text-align:center}h1{margin:0;font-size:26px}
 nav{display:flex;position:sticky;top:0;z-index:5;background:#fff;box-shadow:0 2px 6px #0002}
@@ -8,7 +8,7 @@ nav button.on{border-color:#ff7a59;color:#c2410c;font-weight:bold;background:#ff
 main{max-width:760px;margin:auto;padding:12px}.card{background:#fff;border-radius:18px;padding:16px;margin-bottom:16px;box-shadow:0 2px 8px #0001;border-top:8px solid var(--c,#ff7a59)}
 h2{font-size:22px;margin:0 0 12px}input,select,textarea{padding:12px;border:2px solid #9ca3af;border-radius:12px;font-size:18px;width:100%;background:#fff}
 label{display:block;font-weight:bold;margin:6px 0}
-button{padding:14px 18px;border:0;border-radius:14px;background:#2563eb;color:#fff;cursor:pointer;font-size:18px;font-weight:bold;min-height:52px}
+a.btn{display:inline-flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;box-sizing:border-box;}button,a.btn{padding:14px 18px;border:0;border-radius:14px;background:#2563eb;color:#fff;cursor:pointer;font-size:18px;font-weight:bold;min-height:52px}
 button.g{background:#16a34a}button.o{background:#ea580c}button.p{background:#9333ea}button.del{background:#fee2e2;color:#b91c1c;min-height:44px;padding:8px 14px}
 .row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}.row>*{flex:1 1 140px}
 ul{list-style:none;padding:0;margin:0}li{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:2px dashed #eee}
@@ -37,7 +37,7 @@ li span{flex:1}.done span{text-decoration:line-through;color:#888}input[type=che
 <section id="s-pack" class="sec"><div class="card" style="--c:#16a34a"><h2>🎒 持ち物</h2><div class="row"><input id="px" placeholder="例：充電器・お薬手帳"><button class="g" onclick="add('pack',{x:v('px'),ok:false})">＋ 追加</button></div><ul id="pack"></ul></div></section>
 <section id="s-cost" class="sec"><div class="card" style="--c:#eab308"><h2>💴 費用</h2><div class="row"><select id="ec"><option>交通</option><option>宿泊</option><option>食事</option><option>観光</option><option>その他</option></select><input type="number" inputmode="numeric" id="ea" placeholder="金額"></div><div class="row"><input id="ex" placeholder="内容"><button class="g" onclick="add('cost',{c:v('ec'),x:v('ex'),a:+v('ea')})">＋ 追加</button></div><ul id="cost"></ul><div class="tot" id="tot"></div></div></section>
 <section id="s-find" class="sec">
-<div class="card" style="--c:#0ea5e9"><h2>🔍 旅行サイトでさがす</h2><p>行き先：<b id="fdest">（旅行タブで行き先を入れてください）</b></p><div id="sites" class="row"></div>
+<div class="card" style="--c:#0ea5e9"><h2>🔍 旅行サイトでさがす</h2><p>行き先：<b id="fdest"></b></p><div class="row"><input id="sdest" placeholder="行き先を入力（例：京都）" oninput="sdest=this.value;sites()"></div><div id="sites" class="row"></div>
 <p class="note">サイトが開いたら、気になるプランのURLをコピーして下の「気になるプラン」に貼り付けてください。</p></div>
 <div class="card" style="--c:#f43f5e"><h2>⭐ 気になるプラン（この旅行）</h2>
 <div class="row"><input id="fu" placeholder="URL（https://…）"><button class="p" onclick="pasteU()">📋 貼り付け</button></div>
@@ -50,7 +50,7 @@ li span{flex:1}.done span{text-decoration:line-through;color:#888}input[type=che
 <div class="row chips" id="mode"></div>
 <label style="font-weight:normal"><input type="checkbox" id="fuk" onchange="deals()" style="vertical-align:middle"> 福岡から使えるものだけ</label>
 <label style="font-weight:normal"><input type="checkbox" id="mine" onchange="deals()" style="vertical-align:middle"> 自分が対象のものだけ</label>
-<button class="p" style="width:100%;margin-top:8px" onclick="gsearch()">🔍 行き先のシニア割引プランをGoogleで検索</button>
+<a id="gsl" class="btn p" style="width:100%;margin-top:8px" href="https://www.google.com/search?q=%E3%82%B7%E3%83%8B%E3%82%A2%20%E5%89%B2%E5%BC%95%20%E3%83%97%E3%83%A9%E3%83%B3" target="_blank" rel="noopener">🔍 行き先のシニア割引プランをGoogleで検索</a>
 <p class="note">📌 調査日 2026年10月。各社の公式サイトで確認した内容です。条件や料金は変わることがあります。ご利用前に必ず公式サイトでご確認ください。</p></div>
 <div id="deals"></div></section>
 </main>
@@ -72,8 +72,8 @@ const PLANS=[
 {n:'学生割引',p:'名門大洋フェリー',m:'船',min:0,fk:true,stu:true,d:'学生証の提示で本人のエコノミー運賃20%割引（A・B期間）。',u:'https://www.cityline.co.jp/fare/discount'}
 ];
 const MODES=['すべて','鉄道','飛行機','バス','船','宿泊'];let mode='すべて';
-let db=JSON.parse(localStorage.getItem('tp')||'{}'),cur=Object.keys(db)[0];
-const $=i=>document.getElementById(i),v=i=>$(i).value,save=()=>localStorage.setItem('tp',JSON.stringify(db)),T=()=>db[cur];
+let db;try{db=JSON.parse(localStorage.getItem('tp')||'{}')||{}}catch(e){db={}}let cur=Object.keys(db)[0];
+const $=i=>document.getElementById(i),v=i=>$(i).value,save=()=>{try{localStorage.setItem('tp',JSON.stringify(db))}catch(e){alert('保存できませんでした（ブラウザの設定をご確認ください）')}},T=()=>db[cur];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button,.sec').forEach(e=>e.classList.remove('on'));b.classList.add('on');$('s-'+b.dataset.s).classList.add('on');scrollTo(0,0)});
 function addTrip(){const n=v('tname').trim();if(!n)return;if(!db[n])db[n]={plan:[],pack:[],cost:[],budget:0};cur=n;$('tname').value='';save();render()}
@@ -98,10 +98,10 @@ $('deals').innerHTML=R.length?R.map(p=>{const ag=p.min?`${p.min}歳以上${p.max
 return `<div class="card plan ${age&&!el(p)?'dim':''}" style="--c:${{鉄道:'#16a34a',飛行機:'#2563eb',船:'#0891b2',バス:'#ea580c',宿泊:'#9333ea'}[p.m]}"><h2>${{鉄道:'🚄',飛行機:'✈️',船:'⛴️',バス:'🚌',宿泊:'🏨'}[p.m]} ${p.n}</h2>
 <span class="tag">${p.p}</span><span class="tag">${p.m}</span><span class="tag">対象：${ag}</span>${p.fk?'<span class="tag">福岡から利用可</span>':''}
 ${age?(el(p)?'<span class="tag ok">✅ あなたは対象です</span>':'<span class="tag ng">対象外の年齢</span>'):''}
-<p>${p.d}</p><div class="row"><button class="o" onclick="window.open('${p.u}','_blank')">🌐 公式サイトを開く</button><button class="g" onclick="importDeal(${PLANS.indexOf(p)})">⭐ この旅行に取り込む</button></div></div>`}).join(''):'<div class="card">条件に合うプランが見つかりません。バス・宿泊は各社で条件が異なるため、上の「Googleで検索」をご利用ください。</div>'}
+<p>${p.d}</p><div class="row"><a class="btn o" href="${p.u}" target="_blank" rel="noopener">🌐 公式サイトを開く</a><button class="g" onclick="importDeal(${PLANS.indexOf(p)})">⭐ この旅行に取り込む</button></div></div>`}).join(''):'<div class="card">条件に合うプランが見つかりません。バス・宿泊は各社で条件が異なるため、上の「Googleで検索」をご利用ください。</div>'}
 function gsearch(){const d=(T()&&T().dest)||prompt('行き先を入力してください（例：京都）');if(!d)return;window.open('https://www.google.com/search?q='+encodeURIComponent(d+' シニア 割引 プラン'),'_blank')}
 const SITES=[
-['🏨 じゃらん','#ef4444',d=>'https://www.jalan.net/uw/uwp2011/uww2011init.do?keyword='+E(d)],
+['🏨 じゃらん','#ef4444',d=>'https://www.jalan.net/uw/uwp2011/uww2011search.do?keyword='+SJ(d)],
 ['🧳 JTB 宿','#dc2626',d=>'https://www.jtb.co.jp/kokunai-hotel/list/?keyword='+E(d)],
 ['🏯 楽天トラベル','#be123c',d=>G('site:travel.rakuten.co.jp '+d+' 宿')],
 ['💎 一休.com','#1e3a8a',d=>G('site:ikyu.com '+d)],
@@ -111,17 +111,20 @@ const SITES=[
 ['🔎 Google シニア割引','#2563eb',d=>G(d+' シニア 割引 プラン')],
 ['🔎 Google ツアー（日付つき）','#16a34a',d=>G(d+' ツアー '+(T()&&T().from?T().from.replace(/-/g,'/'):''))]];
 const E=encodeURIComponent,G=q=>'https://www.google.com/search?q='+E(q);
-function sites(){const d=T()&&T().dest;$('fdest').textContent=d||'（旅行タブで行き先を入れてください）';
-$('sites').innerHTML=SITES.map((x,i)=>`<button style="background:${x[1]};flex:1 1 45%" onclick="openSite(${i})">${x[0]}</button>`).join('')}
+let sdest='',SJT=null;function SJ(t){if(!SJT){SJT={};try{const dc=new TextDecoder('shift_jis');for(let a=0x81;a<=0xFC;a++){if(a>0x9F&&a<0xE0)continue;for(let b=0x40;b<=0xFC;b++){if(b==0x7F)continue;const c=dc.decode(new Uint8Array([a,b]));if(c.length==1&&c!='\uFFFD'&&!(c in SJT))SJT[c]='%'+a.toString(16).toUpperCase()+'%'+b.toString(16).toUpperCase()}}}catch(e){}}
+return [...t].map(c=>c.charCodeAt(0)<128?E(c):(SJT[c]||'')).join('')}
+function sites(){const d=(T()&&T().dest)||sdest.trim();$('fdest').textContent=d||'（旅行タブで行き先を入れるか、下に入力してください）';$('sdest').parentNode.style.display=(T()&&T().dest)?'none':'';
+$('sites').innerHTML=SITES.map((x,i)=>d?`<a class="btn" style="background:${x[1]};color:#fff;flex:1 1 45%" href="${esc(SITES[i][2](d))}" target="_blank" rel="noopener">${x[0]}</a>`:`<button style="background:${x[1]};flex:1 1 45%;opacity:.5" onclick="alert('先に行き先を入れてください');$('sdest').focus()">${x[0]}</button>`).join('');
+$('gsl').href=G((d?d+' ':'')+'シニア 割引 プラン')}
 function openSite(i){const d=(T()&&T().dest)||prompt('行き先を入力してください（例：京都）');if(d)window.open(SITES[i][2](d),'_blank')}
 async function pasteU(){try{$('fu').value=await navigator.clipboard.readText()}catch(e){alert('長押しして「ペースト」で貼り付けてください')}}
 function addFav(){if(!T()){alert('先に旅行を追加してください');return}const u=v('fu').trim(),t=v('ft').trim()||u;if(!t)return;if(u&&!/^https?:\/\//.test(u)){alert('URLは https:// で始まるものを入れてください');return}
 (T().fav=T().fav||[]).push({u,t,s:v('fs'),p:+v('fp')||0,m:v('fm')});save();['fu','ft','fs','fp','fm'].forEach(i=>$(i).value='');render()}
-function importDeal(i){if(!T()){alert('先に旅行を追加してください');return}const p=PLANS[i];(T().fav=T().fav||[]).push({u:p.u,t:p.n,s:p.p,p:0,m:p.d});save();render();alert('「気になるプラン」に取り込みました（🔍さがす タブ）')}
+function importDeal(i){if(!T()){alert('先に旅行を追加してください');return}const p=PLANS[i];if((T().fav||[]).some(f=>f.u==p.u&&f.t==p.n)){alert('この旅行にはもう取り込み済みです（🔍さがす タブ）');return}(T().fav=T().fav||[]).push({u:p.u,t:p.n,s:p.p,p:0,m:p.d});save();render();alert('「気になるプラン」に取り込みました（🔍さがす タブ）')}
 function favCost(i){const f=T().fav[i];if(!f.p){alert('料金が入っていません');return}T().cost.push({c:'その他',x:f.t,a:f.p});save();render();alert('費用に追加しました')}
 function favs(){const L=(T()&&T().fav)||[],C=['#f43f5e','#f59e0b','#10b981','#3b82f6','#8b5cf6'];
 $('favs').innerHTML=L.map((f,i)=>`<div class="card" style="--c:${C[i%5]}"><h2>⭐ ${esc(f.t)}</h2>${f.s?`<span class="tag">${esc(f.s)}</span>`:''}${f.p?`<span class="tag ok">${f.p.toLocaleString()}円</span>`:''}<p>${esc(f.m)}</p>
-<div class="row">${/^https?:/.test(f.u)?`<button class="o" onclick="window.open(T().fav[${i}].u,'_blank')">🌐 開く</button>`:''}<button class="g" onclick="favCost(${i})">💴 費用に追加</button><button class="del" onclick="rm('fav',${i})">🗑️ 削除</button></div></div>`).join('')||'<div class="card">まだありません</div>'}
+<div class="row">${/^https?:/.test(f.u)?`<a class="btn o" href="${esc(f.u)}" target="_blank" rel="noopener">🌐 開く</a>`:''}<button class="g" onclick="favCost(${i})">💴 費用に追加</button><button class="del" onclick="rm('fav',${i})">🗑️ 削除</button></div></div>`).join('')||'<div class="card">まだありません</div>'}
 const _r=render;render=function(){_r();sites();favs()};
 render();if(localStorage.getItem('tp_age')===null)$('ageDlg').style.display='flex';
 </script></body></html>
